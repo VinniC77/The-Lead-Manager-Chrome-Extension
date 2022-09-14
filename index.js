@@ -26,22 +26,18 @@ localStorage.clear();
 // Get the leads from the localStorage
 const leadsFromLocalStorage = JSON.parse(localStorage.getItem(myLeads));
 
-if(leadsFromLocalStorage) {
-  myLeads = leadsFromLocalStorage
+if (leadsFromLocalStorage) {
+  myLeads = leadsFromLocalStorage;
   render(myLeads);
 }
 
-
-const tabs = [
-  {url: "https://www.linkedin.com/in/per-harald-borgen/"}
-]
-
-tabBtn.addEventListener('click', () => {
-  myLeads.push(tabs[0].url)
-  localStorage.setItem(myLeads, JSON.stringify(myLeads))
-  render(myLeads);
-})
-
+tabBtn.addEventListener("click", () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    myLeads.push(tabs[0].url);
+    localStorage.setItem("myLeads", JSON.stringify(myLeads));
+    render(myLeads);
+  });
+});
 
 function render(leads) {
   let listItems = "";
@@ -67,12 +63,11 @@ function render(leads) {
   ulEl.innerHTML = listItems;
 }
 
-deleteBtn.addEventListener('dblclick', () => {
+deleteBtn.addEventListener("dblclick", () => {
   localStorage.clear();
   myLeads = [];
   render(myLeads);
-})
-
+});
 
 // Store it in a variable, leadsFromLocalStorage
 // Log out the variable
@@ -80,8 +75,8 @@ deleteBtn.addEventListener('dblclick', () => {
 inputBtn.addEventListener("click", () => {
   myLeads.push(inputEl.value);
   inputEl.value = "";
-  // Save the myLeads array to localStorage 
-    // PS: remember JSON.stringify()
-  localStorage.setItem("myLeads", JSON.stringify(myLeads))
+  // Save the myLeads array to localStorage
+  // PS: remember JSON.stringify()
+  localStorage.setItem("myLeads", JSON.stringify(myLeads));
   render(myLeads);
 });
